@@ -1,13 +1,8 @@
 const questionElement = document.getElementById('question');
-// const choice0Element = document.getElementById('choice0');
-// const choice1Element = document.getElementById('choice1');
-// const choice2Element = document.getElementById('choice2');
-// const guess0Element = document.getElementById('guess0');
-// const guess1Element = document.getElementById('guess1');
-// const guess2Element = document.getElementById('guess2');
 const progressElement = document.getElementById('progress');
 const choiceElements = document.querySelectorAll('.choice');
 const guessElements = document.querySelectorAll('.guess');
+const guesses = [];
 
 function Quiz() {
   this.questions = [];
@@ -30,6 +25,25 @@ Question.prototype.toHTML = function() {
     choiceElements[num].textContent = this.choices[num];``
   }
 }
-
-const question1 = new Question("Who is the best quarterback ever?", "Tom Brady", ["Tom Brady", "Joe Montana", "John Elway", ]);
+Question.prototype.check = function() {
+  if (this.answer === guesses.indexOf( this.answer ) ) {
+    console.log('correct');
+  } else {
+    console.log('incorrect');
+  }
+}
+const question1 = new Question("Who is the best quarterback ever?", 0, ["Tom Brady", "Joe Montana", "John Elway", ]);
 question1.toHTML();
+
+function buttonListener() {
+  for (i = 0; i < guessElements.length; i++) {
+    let num = i;
+    guessElements[num].addEventListener("click", function() {
+      console.log('test' + num);
+      guesses.push( num );
+      question1.check();
+    });
+
+  }
+}
+buttonListener();
