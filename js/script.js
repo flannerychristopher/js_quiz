@@ -3,6 +3,7 @@ const questionElement = document.getElementById('question');
 const progressElement = document.getElementById('progress');
 const choiceElements = document.querySelectorAll('.choice');
 const guessElements = document.querySelectorAll('.guess');
+const startButton = document.getElementById('start');
 
 // QUIZ CONSTRUCTOR
 function Quiz() {
@@ -14,6 +15,17 @@ function Quiz() {
 }
 Quiz.prototype.add = function(question) {
   this.questions.push(question);
+}
+Quiz.prototype.listen = function() {
+  buttonListener(this);
+}
+Quiz.prototype.reset = function() {
+  // this.questions = [];
+  // this.questionIndex = 0;
+  // this.guesses = [];
+  // this.wrongGuesses = 0;
+  // this.rightGuesses = 0;
+  // progressElement.innerHTML = "Let's take the test!";
 }
 Quiz.prototype.render = function(i) {
   if (this.questions[i]) {
@@ -31,9 +43,6 @@ function Question(question, answer, choices) {
   this.choices = choices;
   this.guess = false;
 }
-Question.prototype.guess = function() {
-
-}
 Question.prototype.toHTML = function() {
   questionElement.textContent = this.question;
   for (i = 0; i < this.choices.length; i++) {
@@ -50,29 +59,35 @@ Question.prototype.check = function() {
     this.guess = false;
   }
 }
-
 // INITIALIZE QUIZ AND QUESTIONS
 const quiz1 = new Quiz();
 const question1 = new Question("Who is the best quarterback ever?", 0, ["Tom Brady", "Joe Montana", "John Elway"]);
-const question2 = new Question("What color is the sky?", 1, ["red", "blue", "green"]);
+const question2 = new Question("Who is the only offensive football player to win five Super Bowls?", 1, ["Deion Sanders", "Tom Brady", "Dan Marino"]);
+const question3 = new Question("Who is married to a Brazilian supermodel?", 2, ["Donald Trump", "Tom Cruise", "Tom Brady"]);
+const question4 = new Question("Which athlete is from San Mateo, California?", 0, ["Tom Brady", "Nomar Garciaparra", "Bobby Orr"]);
 quiz1.add(question1);
 quiz1.add(question2);
+quiz1.add(question3);
+quiz1.add(question4);
 quiz1.render(quiz1.questionIndex);
+quiz1.listen();
 
 // LISTEN FOR BUTTON CLICKS
-function buttonListener() {
+function buttonListener(quiz) {
   for (i = 0; i < guessElements.length; i++) {
     let num = i;
     guessElements[num].addEventListener("click", function() {
-      console.log('test' + num);
-      quiz1.guesses.push( num );
-      quiz1.questions[quiz1.questionIndex].check();
-
-      progressElement.innerHTML = 'You have answered ' + quiz1.rightGuesses +
-                      ' correctly and ' + quiz1.wrongGuesses + ' incorrectly.';
-      quiz1.questionIndex += 1;
-      quiz1.render(quiz1.questionIndex);
+      quiz.guesses.push( num );
+      quiz.questions[quiz.questionIndex].check();
+      progressElement.innerHTML = 'You have answered ' + quiz.rightGuesses +
+                      ' correctly and ' + quiz.wrongGuesses + ' incorrectly.';
+      quiz.questionIndex += 1;
+      quiz.render(quiz.questionIndex);
     });
   }
 }
-buttonListener();
+
+// startButton.addEventListener("click", function() {
+  // quiz.reset();
+
+// });
